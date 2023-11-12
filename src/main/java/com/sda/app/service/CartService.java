@@ -32,7 +32,7 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public void deleteCart(Cart cart){
-        cartRepository.delete(cart);
+    public void deleteCart(Integer id){
+        cartRepository.deleteById(id);
     }
 }

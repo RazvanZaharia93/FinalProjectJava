@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -28,8 +29,9 @@ public class ItemController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getItemById(@PathVariable("id")Integer id){
+    public ResponseEntity<ApiResponse> getItemById(@PathVariable("id") Integer id) {
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Item by ID")
@@ -76,6 +78,29 @@ public class ItemController {
                 .message("Item sters cu succes")
                 .data(null)
                 .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse> searchItem(@RequestParam String word) {
+        //http://localhost:8080/items/search?word=test
+        //Daca deschidem in browser, ne va afisa din baza de date
+        Optional<Item> item = itemService.searchItem(word);
+        ApiResponse response = new ApiResponse.Builder().build();
+        if (item.isPresent()) {
+            response = new ApiResponse.Builder()
+                    .status(200)
+                    .message("item gasit")
+                    .data(item.get())
+                    .build();
+        } else {
+            response = new ApiResponse.Builder()
+                    .status(200)
+                    .message("item nu a fost gasit")
+                    .data(null)
+                    .build();
+        }
+
         return ResponseEntity.ok(response);
     }
 }
